@@ -1,0 +1,25 @@
+export API_KEY=pk_8ddc2e9f03cc4877947333a640dd73db
+
+
+googlemaps API JS
+geocoding API
+AIzaSyAK2psyrrWMo41mcGCnga6ITxShJqGJLoc
+
+Use this key in your application by passing it with key=API_KEY parameter.
+
+
+
+
+
+google fonts
+
+Web hosting
+https://signup.heroku.com/
+
+bootstrap
+or
+https://materializecss.com/
+
+
+For color/theme
+https://coolors.co/

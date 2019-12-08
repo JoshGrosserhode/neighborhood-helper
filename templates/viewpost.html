@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Post:
+{% endblock %}
+
+{% block main %}
+
+
+<h3>
+   {{ rows[0]['title'] }}
+</h3>
+<p>
+    {{ rows[0]['summary'] }}
+</p>
+<br>
+
+<div class="container">
+  <div class="row">
+      <div class="col">
+            &zwnj;
+          <table class="table table-bordered">
+              <tbody>
+                <tr>
+                  <th scope="row" style="background-color: rgb(190, 220, 232);">Work Type:</th>
+                  <td>{{ rows[0]['work_type'] }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">Estimated Hours:</th>
+                  <td>{{ rows[0]['est_hour'] }}</td>
+                </tr>
+                <tr>
+                  <th scope="row" style="background-color: rgb(190, 220, 232);">Min # of helpers:</th>
+                  <td>{{ rows[0]['min_help'] }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">Max # of helpers:</th>
+                  <td>{{ rows[0]['max_help'] }}</td>
+                </tr>
+                <tr>
+                  <th scope="row" style="background-color: rgb(190, 220, 232);">Date Posted:</th>
+                  <td>{{ rows[0]['post_time'].split(" ")[0] }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <br>
+            <p>
+              <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                Send Message
+              </button>
+            </p>
+            <div class="collapse" id="collapseExample">
+              <div class="card card-body form-group">
+                <form action="/messenger" method="post">
+                  <input type="hidden" id="post_id" name="post_id" value="{{ rows[0]['post_id'] }}">
+                  <input type="hidden" id="post_user" name="post_user" value="{{ rows[0]['post_user'] }}">
+                  <!--<div class="form-group">-->
+                    <label for="message_text">Message to poster:</label>
+                    <textarea class="form-control" id="message_text" name="message_text" rows="3"></textarea>
+                  <!--</div>-->
+                  <button style="margin-top: 10px;" type="submit" class="btn btn-primary">Send!</button>
+                </form>
+              </div>
+            </div>
+
+
+    </div>
+    <div class="col-6">
+      <div style="font-style: italic;">Markers are purposfully approximate</div>
+      <div id="googleMap" style="width:100%;height:400px;"></div>
+
+        <script>
+        function myMap() {
+            var geo_lat = {{ rows[0]['rand_geo_lat'] }};
+            var geo_lng = {{ rows[0]['rand_geo_lng'] }};
+
+            var location = {lat: geo_lat, lng: geo_lng};
+            var mapProp= {
+            center:new google.maps.LatLng(location),
+            zoom:9,
+            };
+            var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+            var marker = new google.maps.Marker({position: location, map: map});
+
+        }
+        </script>
+
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuUGyBycQvpG-jy7O58q9ucmB4AGqmHx0&callback=myMap"></script>
+
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

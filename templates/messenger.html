@@ -1,0 +1,174 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Messenger
+{% endblock %}
+
+{% block main %}
+  <h5>Messages</h5>
+
+
+<div class="container">
+  <div class="row">
+  <div class="col" style="padding: 0;">
+      <table class="table table-striped overflow-hidden" id="index_table">
+        <thead>
+          <tr class="tr-link">
+            <th onclick="sortTable(0)" scope="col">From/To</th>
+            <th onclick="sortTable(1)" scope="col">Message</th>
+            <th onclick="sortTable(1)" scope="col">Status</th>
+            <th onclick="sortTable(2)" scope="col">Post ID</th>
+          </tr>
+        </thead>
+        <tbody>
+            Click on table headers to sort rows
+
+
+            {% for message in messeges_sent %}
+
+            {% set postlocation = "http://9da8f99f-464a-4b93-bd4c-f58994d6b665-ide.cs50.xyz/viewpost?post_id=" ~ message['post_id_m']  %}
+
+
+                <tr>
+                  <td>To: {{ message['username'] }}</td>
+                  <td>{{ message['message'] }}</td>
+                  <td><button type="button" class="btn btn-secondary" disabled>Awaiting Reply</button></td>
+                  <td class="clickable tr-link" onclick="document.location='{{ postlocation }}'" style="cursor:hand">
+                      {{ message['post_id_m'] }}</td>
+                </tr>
+            {% endfor %}
+
+            {% for message in messeges_rec %}
+
+            {% set postlocation = "http://9da8f99f-464a-4b93-bd4c-f58994d6b665-ide.cs50.xyz/viewpost?post_id=" ~ message['post_id_m']  %}
+
+
+                <tr>
+                  <td>From: {{ message['username'] }}</td>
+                  <td>{{ message['message'] }}</td>
+
+                  <td><button type="button" class="btn btn-primary" data-toggle="modal"
+                  data-target="#exampleModal" data-whatever="{{ message['username'] }}"
+                  data-post_id_input="{{ message['post_id_m'] }}" data-post_user_input="{{ message['user_id_2'] }}">Reply</button></td>
+
+
+                  <!--<td><button type="button" class="btn btn-outline-primary" data-toggle="collapse" data-target="#multiCollapse">Reply</button></td>-->
+                  <td class="clickable tr-link" onclick="document.location='{{ postlocation }}'" style="cursor:hand">
+                      {{ message['post_id_m'] }}</td>
+                </tr>
+            {% endfor %}
+
+
+        </tbody>
+      </table>
+    </div>
+
+
+    <!--<script> src="/sortTables.js"</script>-->
+    <script>
+      function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("index_table");
+        switching = true;
+        // Set the sorting direction to ascending:
+        dir = "asc";
+        /* Make a loop that will continue until
+        no switching has been done: */
+        while (switching) {
+          // Start by saying: no switching is done:
+          switching = false;
+          rows = table.rows;
+          /* Loop through all table rows (except the
+          first, which contains table headers): */
+          for (i = 1; i < (rows.length - 1); i++) {
+            // Start by saying there should be no switching:
+            shouldSwitch = false;
+            /* Get the two elements you want to compare,
+            one from current row and one from the next: */
+            x = rows[i].getElementsByTagName("td")[n];
+            y = rows[i + 1].getElementsByTagName("td")[n];
+            /* Check if the two rows should switch place,
+            based on the direction, asc or desc: */
+            if (dir == "asc") {
+              if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                // If so, mark as a switch and break the loop:
+                shouldSwitch = true;
+                break;
+              }
+            } else if (dir == "desc") {
+              if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                // If so, mark as a switch and break the loop:
+                shouldSwitch = true;
+                break;
+              }
+            }
+          }
+          if (shouldSwitch) {
+            /* If a switch has been marked, make the switch
+            and mark that a switch has been done: */
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            // Each time a switch is done, increase this count by 1:
+            switchcount ++;
+          } else {
+            /* If no switching has been done AND the direction is "asc",
+            set the direction to "desc" and run the while loop again. */
+            if (switchcount == 0 && dir == "asc") {
+              dir = "desc";
+              switching = true;
+            }
+          }
+        }
+      }
+
+
+    </script>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+
+      <div class="modal-body">
+        <form action="/messenger" method="post">
+          <div class="form-group">
+            <label for="message_text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message_text" name="message_text"></textarea>
+            <input class="post_id_input" type="hidden" id="post_id" name="post_id" value=>
+            <input class="post_user_input" type="hidden" id="post_user" name="post_user" value=>
+          </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Send message</button>
+        </div>
+        </form>
+      </div>
+
+
+
+    </div>
+  </div>
+</div>
+
+<script>
+  $('#exampleModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget) // Button that triggered the modal
+      var recipient = button.data('whatever') // Extract info from data-* attributes
+      var post_id_in = button.data('post_id_input')
+      var post_user_in = button.data('post_user_input')
+      // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+      // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+      var modal = $(this)
+      modal.find('.modal-title').text('New message to ' + recipient)
+      modal.find('.post_id_input').val(post_id_in)
+      modal.find('.post_user_input').val(post_user_in)
+  })
+</script>
+{% endblock %}
