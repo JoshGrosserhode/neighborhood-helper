@@ -171,10 +171,10 @@ def viewpost():
     rows = db.execute("SELECT * FROM posts WHERE post_id = :post_id;",
                       post_id=post_id)
 
-    # if session.get("user_id") is None:
-    #     user_status = "none"
-    # else:
-    #     user_status = session["user_id"]
+    if session.get("user_id") is None:
+        user_status = "none"
+    else:
+        user_status = session["user_id"]
 
     # print(user_status)
     # sys.stdout.flush()

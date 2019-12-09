@@ -7,5 +7,4 @@
 # technical tour of your project underneath its hood.
 
 
-{% if user_status != "none" %}
- {% endif %}
+
