@@ -270,17 +270,19 @@ def register():
         # hash the users input password to be stored in the database
         passwordhash = generate_password_hash(request.form.get("password"))
 
-        db.execute("INSERT INTO users (username, hash) VALUES (:username, :hash);",
+        userid = db.execute("INSERT INTO users (username, hash) VALUES (:username, :hash);",
                     username=request.form.get("username"), hash=passwordhash)
 
 
         #log the new user in
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = :username;",
-                          username=request.form.get("username"))
+        # rows = db.execute("SELECT * FROM users WHERE username = :username;",
+        #                   username=request.form.get("username"))
 
         # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
+        # session["user_id"] = rows[0]["id"]
+        session["user_id"] = userid
+
 
         # Redirect user to home page
         return redirect("/")
