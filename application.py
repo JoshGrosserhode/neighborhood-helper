@@ -45,8 +45,8 @@ db = SQL("postgres://dhxujswbyuzout:16236b614f74a8fa701f8a01751ddbb33ce54d7f2228
 def index():
     """Show posts for help in a list and on an interactive map"""
 
-    posts = db.execute("SELECT * FROM posts WHERE active = :status",
-                  status=1)
+    # posts = db.execute("SELECT * FROM posts WHERE active = :status", status='t')
+    posts = db.execute("SELECT * FROM posts")
 
     for post in posts:
         datetime = post['post_time']
