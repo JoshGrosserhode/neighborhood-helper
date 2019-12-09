@@ -7,4 +7,9 @@
 # technical tour of your project underneath its hood.
 
 
+3 database tables:
+    users (login info, etc)
+    posts (title, summary, typeOfWork, etc)
+    messeges (sender_id, receiver_id, message_id, message)
+
 
