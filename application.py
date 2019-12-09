@@ -33,8 +33,8 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///neighbor.db")
-# db = SQL("postgres://dhxujswbyuzout:16236b614f74a8fa701f8a01751ddbb33ce54d7f22287352af010d43f9305156@ec2-184-72-238-22.compute-1.amazonaws.com:5432/dfv02l7h6iik3c")
+# db = SQL("sqlite:///neighbor.db")
+db = SQL("postgres://dhxujswbyuzout:16236b614f74a8fa701f8a01751ddbb33ce54d7f22287352af010d43f9305156@ec2-184-72-238-22.compute-1.amazonaws.com:5432/dfv02l7h6iik3c")
 
 # # Make sure API key is set
 # if not os.environ.get("API_KEY"):
@@ -64,6 +64,7 @@ def about():
 
 
 @app.route("/messenger", methods=["GET","POST"])
+@login_required
 def messenger():
     """messenger for people to contact posters"""
 
@@ -77,18 +78,16 @@ def messenger():
 
 
         # add values to table
-        message_id = db.execute("INSERT INTO messages (user_id_1, user_id_2, message, post_id_m) VALUES (:user_id_1, :user_id_2, :message, :post_id_m)",
+        message_id = db.execute("INSERT INTO messages (user_id_1, user_id_2, message, post_id_m) VALUES (:user_id_1, :user_id_2, :message, :post_id_m);",
         user_id_1=post_user, user_id_2=session["user_id"], message=message_text, post_id_m=post_id)
-
-
 
         # end if
 
 
-    messeges_rec = db.execute("SELECT * FROM messages JOIN users ON messages.user_id_2=users.id WHERE user_id_1 = :user_id_1",
+    messeges_rec = db.execute("SELECT * FROM messages JOIN users ON messages.user_id_2=users.id WHERE user_id_1 = :user_id_1;",
         user_id_1=session["user_id"])
 
-    messeges_sent = db.execute("SELECT * FROM messages JOIN users ON messages.user_id_1=users.id WHERE user_id_2 = :user_id_2",
+    messeges_sent = db.execute("SELECT * FROM messages JOIN users ON messages.user_id_1=users.id WHERE user_id_2 = :user_id_2;",
         user_id_2=session["user_id"])
 
     return render_template("messenger.html", messeges_sent=messeges_sent, messeges_rec=messeges_rec)
@@ -145,7 +144,7 @@ def post():
 
 
         # add values to table
-        post_id = db.execute("INSERT INTO posts (post_user, title, address, summary, work_type, est_hour, min_help, max_help, geo_lat, geo_lng, rand_geo_lat, rand_geo_lng) VALUES (:post_user, :title, :address, :summary, :work_type, :est_hour, :min_help, :max_help, :geo_lat, :geo_lng, :rand_geo_lat, :rand_geo_lng)",
+        post_id = db.execute("INSERT INTO posts (post_user, title, address, summary, work_type, est_hour, min_help, max_help, geo_lat, geo_lng, rand_geo_lat, rand_geo_lng) VALUES (:post_user, :title, :address, :summary, :work_type, :est_hour, :min_help, :max_help, :geo_lat, :geo_lng, :rand_geo_lat, :rand_geo_lng);",
             post_user=session["user_id"], title=title, address=AddressFull, summary=summary, work_type=workType, est_hour=hoursEst, min_help=minHelp, max_help=maxHelp, geo_lat=geo_lat, geo_lng=geo_lng, rand_geo_lat=rand_geo_lat, rand_geo_lng=rand_geo_lng)
 
         # Redirect user to viewpost page along with the post_id
@@ -169,10 +168,15 @@ def viewpost():
 
 
     # Query database for post info
-    rows = db.execute("SELECT * FROM posts WHERE post_id = :post_id",
+    rows = db.execute("SELECT * FROM posts WHERE post_id = :post_id;",
                       post_id=post_id)
 
-    return render_template("viewpost.html", rows=rows)
+    if session.get("user_id") is None:
+        user_status = "none"
+    else:
+        user_status = session["user_id"]
+
+    return render_template("viewpost.html", rows=rows, user_status=user_status)
 
 
 @app.route("/profile", methods=["GET"])
@@ -206,7 +210,7 @@ def login():
             return apology("must provide password", 403)
 
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = :username",
+        rows = db.execute("SELECT * FROM users WHERE username = :username;",
                           username=request.form.get("username"))
 
         # Ensure username exists and password is correct
@@ -253,7 +257,7 @@ def register():
             return apology("must confrim your password", 403)
 
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = :username",
+        rows = db.execute("SELECT * FROM users WHERE username = :username;",
                           username=request.form.get("username"))
 
         if len(rows) == 1:
@@ -266,13 +270,13 @@ def register():
         # hash the users input password to be stored in the database
         passwordhash = generate_password_hash(request.form.get("password"))
 
-        db.execute("INSERT INTO users (username, hash) VALUES (:username, :hash)",
+        db.execute("INSERT INTO users (username, hash) VALUES (:username, :hash);",
                     username=request.form.get("username"), hash=passwordhash)
 
 
         #log the new user in
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = :username",
+        rows = db.execute("SELECT * FROM users WHERE username = :username;",
                           username=request.form.get("username"))
 
         # Remember which user has logged in
