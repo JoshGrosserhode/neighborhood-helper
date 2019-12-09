@@ -46,7 +46,7 @@ def index():
     """Show posts for help in a list and on an interactive map"""
 
     posts = db.execute("SELECT * FROM posts WHERE active = :status",
-                  status='t')
+                  status=1)
 
     for post in posts:
         datetime = post['post_time']
