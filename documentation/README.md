@@ -18,9 +18,22 @@ To interact with the website
         on the register button, create a new account, and now you can return to that post
         and send a message directly to the poster-in-need.
 
+        I didn't generate a lot of data on the new PostgreSQL database, so the map is a bit sparse
+
     Feel free to create accounts, postings, send messages, etc.. (thats actually all there is to it :)  )
 
-    I did not get around to implementing any time of point/ranking system
+
+        To run it locally, line 30 & 36 in application.py need to be uncommented.
+        And any use of "https://neighborhood-helper.herokuapp.com/" needs to be
+        replaced with your webaddress for all of the links to work.
+        Also, when running it locally, the Maps won't work since they are restricted to
+        "https://neighborhood-helper.herokuapp.com/*"
+
+        If need be I can remove all restrictions from the API temporarily.
+
+
+    I did not get around to implementing any time of point/ranking system, which would of been a part of
+    the "best" outcome
 
     I think this README is really short because there just are not that many instructions :)
 
