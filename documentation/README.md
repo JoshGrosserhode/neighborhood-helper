@@ -22,3 +22,5 @@ To interact with the website
 
     I did not get around to implementing any time of point/ranking system
 
+    I think this README is really short because there just are not that many instructions :)
+
