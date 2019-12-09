@@ -179,7 +179,7 @@ def viewpost():
     # print(user_status)
     # sys.stdout.flush()
 
-    return render_template("viewpost.html", rows=rows, user_status=user_status)
+    return render_template("viewpost.html", rows=rows)  #, user_status=user_status)
 
 
 @app.route("/profile", methods=["GET"])
