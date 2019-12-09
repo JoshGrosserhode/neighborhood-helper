@@ -27,7 +27,7 @@ def after_request(response):
 
 
 # Configure session to use filesystem (instead of signed cookies)
-app.config["SESSION_FILE_DIR"] = mkdtemp()
+# app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
@@ -270,7 +270,7 @@ def register():
         # hash the users input password to be stored in the database
         passwordhash = generate_password_hash(request.form.get("password"))
 
-        userid = db.execute("INSERT INTO users (username, hash) VALUES (:username, :hash);",
+        userid = db.execute("INSERT INTO users (username, hash) VALUES (:username, :hash)",
                     username=request.form.get("username"), hash=passwordhash)
 
 
