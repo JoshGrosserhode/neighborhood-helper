@@ -50,7 +50,7 @@ def index():
 
     for post in posts:
         datetime = post['post_time']
-        date = datetime.split(" ")[0]
+        # date = datetime.split(" ")[0]
 
 
     return render_template("index.html", posts=posts)
