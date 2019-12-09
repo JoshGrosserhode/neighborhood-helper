@@ -28,7 +28,7 @@
 
           {% for post in posts %}
 
-            {% set postlocation = "http://9da8f99f-464a-4b93-bd4c-f58994d6b665-ide.cs50.xyz/viewpost?post_id=" ~ post['post_id']  %}
+            {% set postlocation = "https://neighborhood-helper.herokuapp.com/viewpost?post_id=" ~ post['post_id']  %}
 
               <tr class="clickable tr-link" onclick="document.location='{{ postlocation }}'" style="cursor:hand">
                 <td>
@@ -145,7 +145,7 @@
             google.maps.event.addListener(marker, 'click', (function(marker, i) {
               return function() {
 
-              var postsite = "http://9da8f99f-464a-4b93-bd4c-f58994d6b665-ide.cs50.xyz/viewpost?post_id=" + post_id[i]
+              var postsite = "https://neighborhood-helper.herokuapp.com/viewpost?post_id=" + post_id[i]
 
               //src: https://developers-dot-devsite-v2-prod.appspot.com/maps/documentation/javascript/examples/infowindow-simple
               var contentString = '<div id="content">'+
@@ -170,30 +170,6 @@
           {% endfor %}
 
           var infowindow = new google.maps.InfoWindow();
-
-          // google.maps.event.addListener(marker, 'click', (function(marker, i) {
-          //   return function() {
-          //     infowindow.setContent("test");
-          //     infowindow.open(map, marker);
-          //   }
-          // })(marker, i));
-
-          // var infowindow = new google.maps.InfoWindow({
-          //     content:"Hello World!"
-          // });
-
-          // google.maps.event.addListener(marker, 'click', function() {
-          //     infowindow.open(map,marker);
-          // });
-
-
-          // map.addListener('center_changed', function() {
-          //     // get the center of the map when the map changes
-          //     var center = map.getCenter();
-          //     //console.log(center.lat());
-
-          // });
-
       }
 
 
